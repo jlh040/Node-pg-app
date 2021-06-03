@@ -18,9 +18,16 @@ function doesInvoiceExist(results, id) {
 
 
 // If all required data was not sent in the body of a request, throw an error
-function userSentAllData(arg1, arg2) {
-    if (!(arg1 && arg2)) {
-        throw new ExpressError(`Please include a ${arg1}, and ${arg2}!`, 400);
+function userSentAllCompanyData(name, description) {
+    if (!(name && description)) {
+        throw new ExpressError('Please include a name, and description!', 400);
+    }
+}
+
+// Same as above but for invoices
+function userSentAllInvoiceData(comp_code, amt) {
+    if (!(comp_code && amt)) {
+        throw new ExpressError('Please include a comp_code and an amt!', 400);
     }
 }
 
@@ -29,5 +36,6 @@ function userSentAllData(arg1, arg2) {
 module.exports = {
     doesInvoiceExist,
     doesCompanyExist,
-    userSentAllData,
+    userSentAllCompanyData,
+    userSentAllInvoiceData
 }

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = new express.Router();
 const db = require('../db');
-const { doesCompanyExist, userSentAllData } = require('../helperFuncs');
+const { doesCompanyExist, userSentAllCompanyData } = require('../helperFuncs');
 
 router.get('/', async (req, res, next) => {
     try {
@@ -42,7 +42,7 @@ router.post('/', async (req, res, next) => {
 router.put('/:code', async (req, res, next) => {
     try {
         const {name, description} = req.body;
-        userSentAllData(name, description);
+        userSentAllCompanyData(name, description);
         const results = await db.query(`
             UPDATE companies SET name = $1, description = $2 WHERE code = $3
             RETURNING code, name, description`, 

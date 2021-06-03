@@ -1,6 +1,6 @@
 const express = require('express');
 const router = new express.Router();
-const { doesInvoiceExist } = require('../helperFuncs');
+const { doesInvoiceExist, userSentAllInvoiceData } = require('../helperFuncs');
 const db = require('../db');
 
 router.get('/', async (req, res, next) => {
@@ -46,8 +46,30 @@ router.get('/:id', async (req, res, next) => {
 });
 
 router.post('/', async function(req, res, next) {
-    const { comp_code, amt } = req.body;
+    try {
+        const { comp_code, amt } = req.body;
+        userSentAllInvoiceData(comp_code, amt);
+
+        const result = await db.query(`
+            INSERT INTO invoices (comp_code, amt)
+            VALUES ($1, $2) RETURNING id, comp_code, amt, paid, add_date, paid_date`, [comp_code, amt]);
+        const { id, paid, add_date, paid_date } = result.rows[0];
+        doesInvoiceExist(result, id);
     
+        return res.status(201).json({
+            invoice: {
+                id,
+                comp_code,
+                amt,
+                paid,
+                add_date,
+                paid_date
+            }
+        })
+    }
+    catch(e) {
+        return next(e);
+    }
 })
 
 

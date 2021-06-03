@@ -8,6 +8,15 @@ function doesCompanyExist(results, code) {
     };
 }
 
+// Throws an error if the invoice id is not found
+function doesInvoiceExist(results, id) {
+    if (results.rows.length === 0) {
+        throw new ExpressError(`Could not find invoice with id: ${id}`, 404);
+    };
+}
+
+
+
 // If all required data was not sent in the body of a request, throw an error
 function userSentAllData(name, description) {
     if (!(name && description)) {
@@ -17,11 +26,8 @@ function userSentAllData(name, description) {
 
 
 
-
-
-
-
 module.exports = {
+    doesInvoiceExist,
     doesCompanyExist,
-    userSentAllData
+    userSentAllData,
 }

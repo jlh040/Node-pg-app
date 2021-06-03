@@ -24,9 +24,11 @@ app.use((err, req, res, next) => {
   let status = err.status || 500;
   let message = err.message;
 
-  return res.status(status).json({
-    status,
-    message
+  return res.status(status).json({error:
+    {
+      status,
+      message
+    }
   });
 });
 

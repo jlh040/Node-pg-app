@@ -47,7 +47,6 @@ router.put('/:code', async (req, res, next) => {
             UPDATE companies SET name = $1, description = $2 WHERE code = $3
             RETURNING code, name, description`, 
             [name, description, req.params.code]);
-        console.log(results)
 
         doesCompanyExist(results, req.params.code)
 

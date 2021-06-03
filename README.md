@@ -2,7 +2,7 @@
 
 #### Functionality
 
-- This app is a RESTful back-end API server that allows a user to perform all the CRUD operations on two different resources: companies, and invoices.
+- This app is a RESTful back-end JSON API server that allows a user to perform all the CRUD operations on two different resources: companies, and invoices.
 - Testing will be provided shortly.
 
 #### Technicalities
@@ -24,7 +24,11 @@
 
   - **POST /companies**
 
+    - Requires {code, name, description} as JSON
+
   - **PUT /companies/[code]**
+
+    - Requires {name, description} as JSON
 
   - **DELETE /companies/[code]**
 
@@ -34,7 +38,11 @@
 
   - **POST /invoices**
 
+    - Requires {comp_code, amt} as JSON
+
   - **PUT /invoices/[id]**
+
+    - Requires {amt} as JSON
 
   - **DELETE /invoices/[id]**
 

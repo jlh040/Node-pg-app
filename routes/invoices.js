@@ -1,5 +1,6 @@
 const express = require('express');
 const router = new express.Router();
+const ExpressError = require('../expressError');
 const { doesInvoiceExist, userSentAllInvoiceData } = require('../helperFuncs');
 const db = require('../db');
 
@@ -56,6 +57,33 @@ router.post('/', async function(req, res, next) {
         const { id, paid, add_date, paid_date } = result.rows[0];
     
         return res.status(201).json({
+            invoice: {
+                id,
+                comp_code,
+                amt,
+                paid,
+                add_date,
+                paid_date
+            }
+        })
+    }
+    catch(e) {
+        return next(e);
+    }
+});
+
+router.put('/:id', async (req, res, next) => {
+    try {
+        const { amt } = req.body;
+        if (!amt) throw new ExpressError('Must pass in amt!', 400);
+
+        const result = await db.query(`
+            UPDATE invoices SET amt = $1 WHERE id = $2
+            RETURNING id, comp_code, amt, paid, add_date, paid_date`, [amt, req.params.id]);
+        doesInvoiceExist(result, req.params.id);
+        const { id, comp_code, paid, add_date, paid_date } = result.rows[0]
+    
+        return res.json({
             invoice: {
                 id,
                 comp_code,

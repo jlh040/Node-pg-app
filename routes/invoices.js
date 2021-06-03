@@ -97,6 +97,21 @@ router.put('/:id', async (req, res, next) => {
     catch(e) {
         return next(e);
     }
+});
+
+router.delete('/:id', async (req, res, next) => {
+    try {
+        const result = await db.query(`
+        DELETE FROM invoices WHERE id = $1
+        RETURNING comp_code, amt`, [req.params.id]
+        );
+        doesInvoiceExist(result, req.params.id);
+
+        return res.json({status: 'deleted'});
+    }
+    catch(e) {
+        return next(e);
+    }
 })
 
 

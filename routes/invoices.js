@@ -11,7 +11,7 @@ router.get('/', async (req, res, next) => {
     catch(e) {
         return next(e);
     }
-})
+});
 
 router.get('/:id', async (req, res, next) => {
     try {
@@ -43,6 +43,11 @@ router.get('/:id', async (req, res, next) => {
     catch(e) {
         return next(e);
     }
+});
+
+router.post('/', async function(req, res, next) {
+    const { comp_code, amt } = req.body;
+    
 })
 
 

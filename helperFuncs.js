@@ -18,9 +18,9 @@ function doesInvoiceExist(results, id) {
 
 
 // If all required data was not sent in the body of a request, throw an error
-function userSentAllData(name, description) {
-    if (!(name && description)) {
-        throw new ExpressError('Please include a name, and description!', 400);
+function userSentAllData(arg1, arg2) {
+    if (!(arg1 && arg2)) {
+        throw new ExpressError(`Please include a ${arg1}, and ${arg2}!`, 400);
     }
 }
 

@@ -5,8 +5,10 @@ const express = require("express");
 
 const app = express();
 const ExpressError = require("./expressError")
+const companyRoutes = require('./routes/companies');
 
 app.use(express.json());
+app.use('/companies', companyRoutes);
 
 
 /** 404 handler */
@@ -19,11 +21,12 @@ app.use(function(req, res, next) {
 /** general error handler */
 
 app.use((err, req, res, next) => {
-  res.status(err.status || 500);
+  let status = err.status || 500;
+  let message = err.message;
 
-  return res.json({
-    error: err,
-    message: err.message
+  return res.status(status).json({
+    status,
+    message
   });
 });
 

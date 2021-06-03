@@ -74,8 +74,4 @@ router.delete('/:code', async (req, res, next) => {
 })
 
 
-
-
-
-
 module.exports = router;

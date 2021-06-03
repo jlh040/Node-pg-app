@@ -1,0 +1,24 @@
+{
+  "name": "node-pg-app",
+  "version": "1.0.0",
+  "description": "A RESTful API backend application for a company/invoice tracker",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jlh040/Node-pg-app.git"
+  },
+  "author": "Jeff",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jlh040/Node-pg-app/issues"
+  },
+  "homepage": "https://github.com/jlh040/Node-pg-app#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pg": "^8.6.0"
+  }
+}

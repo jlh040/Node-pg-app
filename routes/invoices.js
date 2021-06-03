@@ -54,7 +54,6 @@ router.post('/', async function(req, res, next) {
             INSERT INTO invoices (comp_code, amt)
             VALUES ($1, $2) RETURNING id, comp_code, amt, paid, add_date, paid_date`, [comp_code, amt]);
         const { id, paid, add_date, paid_date } = result.rows[0];
-        doesInvoiceExist(result, id);
     
         return res.status(201).json({
             invoice: {

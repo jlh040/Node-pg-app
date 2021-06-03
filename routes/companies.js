@@ -1,7 +1,7 @@
 const express = require('express');
 const router = new express.Router();
 const db = require('../db');
-const { doesCompanyExist } = require('../helperFuncs');
+const { doesCompanyExist, userSentAllData } = require('../helperFuncs');
 
 router.get('/', async (req, res, next) => {
     try {
@@ -24,7 +24,38 @@ router.get('/:code', async (req, res, next) => {
     catch(e) {
         return next(e);
     }
+});
 
+router.post('/', async (req, res, next) => {
+    try {
+        const {code, name, description} = req.body;
+        const result = await db.query(`
+            INSERT INTO companies (code, name, description) VALUES ($1, $2, $3)
+            RETURNING code, name, description`, [code, name, description]);
+        return res.status(201).json({company: result.rows[0]});
+    }
+    catch(e) {
+        return next(e);
+    }
+});
+
+router.put('/:code', async (req, res, next) => {
+    try {
+        const {name, description} = req.body;
+        userSentAllData(name, description);
+        const results = await db.query(`
+            UPDATE companies SET name = $1, description = $2 WHERE code = $3
+            RETURNING code, name, description`, 
+            [name, description, req.params.code]);
+        console.log(results)
+
+        doesCompanyExist(results, req.params.code)
+
+        return res.json({company: results.rows[0]})
+    }
+    catch(e) {
+        return next(e);
+    }
 })
 
 

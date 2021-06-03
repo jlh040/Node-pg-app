@@ -8,6 +8,13 @@ function doesCompanyExist(results, code) {
     };
 }
 
+// If all required data was not sent in the body of a request, throw an error
+function userSentAllData(name, description) {
+    if (!(name && description)) {
+        throw new ExpressError('Please include a name, and description!', 400);
+    }
+}
+
 
 
 
@@ -15,5 +22,6 @@ function doesCompanyExist(results, code) {
 
 
 module.exports = {
-    doesCompanyExist
+    doesCompanyExist,
+    userSentAllData
 }

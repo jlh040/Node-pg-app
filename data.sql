@@ -2,7 +2,7 @@
 
 DROP TABLE IF EXISTS invoices CASCADE;
 DROP TABLE IF EXISTS companies CASCADE;
-DROP TABLE IF EXISTS industries CASCADE ;
+DROP TABLE IF EXISTS industries CASCADE;
 DROP TABLE IF EXISTS companies_industries CASCADE;
 
 CREATE TABLE companies (
@@ -52,4 +52,3 @@ INSERT INTO companies_industries (comp_code, ind_code)
          ('apple', 'soft'),
          ('ibm', 'tech'),
          ('ibm', 'hard');
-

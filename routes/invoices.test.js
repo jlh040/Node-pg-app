@@ -122,5 +122,21 @@ describe('PUT /invoices/:id', () => {
         
         expect(resp.statusCode).toBe(400);
     })
+});
+
+describe('DELETE /invoices/:id', () => {
+    test('Delete an invoice', async function() {
+        const resp = await request(app).delete(`/invoices/${testInvoice.id}`);
+        const query = await db.query(`SELECT COUNT(*) FROM invoices`);
+
+        expect(resp.statusCode).toBe(200);
+        expect(resp.body).toEqual({status: 'deleted'});
+        expect(+query.rows[0].count).toBe(0);
+    });
+
+    test('Return 404 if invoice is not found', async () => {
+        const resp = await request(app).delete('/invoices/0');
+        expect(resp.status).toBe(404);
+    })
 })
 

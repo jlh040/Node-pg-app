@@ -106,4 +106,9 @@ describe('DELETE /companies/:code', () => {
         expect(response.statusCode).toBe(200);
         expect(+result.rows[0].count).toBe(0);
     })
+
+    test('Return 404 if the company cannot be found', async () => {
+        const response = await request(app).delete('/companies/SeaWorld');
+        expect(response.status).toBe(404)
+    })
 })

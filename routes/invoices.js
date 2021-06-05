@@ -17,13 +17,13 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     try {
         const result = await db.query(`
-        SELECT * FROM invoices
+        SELECT id, amt, paid, comp_code, CAST(add_date AS TEXT), paid_date, name, description FROM invoices
         JOIN companies ON comp_code = code
         WHERE id = $1`, 
         [req.params.id]
         );
         doesInvoiceExist(result, req.params.id);
-        const {id, amt, paid, add_date, paid_date, code, name, description} = result.rows[0];
+        const {id, amt, paid, add_date, paid_date, comp_code:code, name, description} = result.rows[0];
 
         const resultObj = {
             invoice: {

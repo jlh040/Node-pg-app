@@ -17,8 +17,8 @@ beforeEach(async () => {
     const invoiceResult = await db.query(`
         INSERT INTO invoices (comp_code, amt)
         VALUES ('dd', 399.99)
-        RETURNING *`);
-    
+        RETURNING id, amt, comp_code, paid, CAST(add_date AS TEXT), paid_date`);
+        
     testInvoice = invoiceResult.rows[0];
     testCompany = companyResult.rows[0];
 });
@@ -39,4 +39,32 @@ describe('GET /invoices', () => {
         expect(response.statusCode).toBe(200);
         expect(response.body).toEqual({invoices: [{id: testInvoice.id, comp_code: testInvoice.comp_code}]});
     })
-})
+});
+
+describe('GET /:id', () => {
+    test('Get a single invoice', async () => {
+        const resp = await request(app).get(`/invoices/${testInvoice.id}`);
+
+        console.log(resp.body)
+        
+        expect(resp.statusCode).toBe(200);
+        expect(resp.body).toEqual({invoice: {
+                id: testInvoice.id,
+                amt: testInvoice.amt,
+                paid: testInvoice.paid,
+                add_date: testInvoice.add_date,
+                paid_date: testInvoice.paid_date,
+                company: {
+                    code: testCompany.code,
+                    name: testCompany.name,
+                    description: testCompany.description
+                }
+            }
+        })
+    })
+
+    test('Return 404 if the invoice is not found', async () => {
+        const resp = await request(app).get('/invoices/45');
+        expect(resp.statusCode).toBe(404);
+    })
+});

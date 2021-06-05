@@ -47,11 +47,24 @@ async function getPaidDate(userPaidStatus, invoiceId) {
     return paid_date;
 }
 
+// Checks that the industry code and company code are valid
+async function checkForValidIndAndCo(ind, co) {
+    const indResult = await db.query(`SELECT code FROM industries`);
+    const industries = indResult.rows.map(val => val.code);
+
+    const compResult = await db.query(`SELECT code FROM companies`);
+    const companies = compResult.rows.map(val => val.code);
+
+    if (!(industries.includes(ind) && companies.includes(co))) {
+        throw new ExpressError('Please enter valid industry and company codes!', 400);
+    }
+}
 
 module.exports = {
     doesInvoiceExist,
     doesCompanyExist,
     userSentAllCompanyData,
     userSentAllInvoiceData,
+    checkForValidIndAndCo,
     getPaidDate
 }

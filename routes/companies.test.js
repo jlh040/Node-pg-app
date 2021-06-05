@@ -35,3 +35,17 @@ describe('GET /companies', () => {
         expect(resp.body).toEqual({companies: [{code: testCompany.code, name: testCompany.name}]});
     })
 })
+
+describe('GET /companies/:code', () => {
+    test('Get a single company', async () => {
+        const response = await request(app).get(`/companies/${testCompany.code}`);
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual({company: {
+            name: testCompany.name,
+            code: testCompany.code,
+            description: testCompany.description,
+            invoices: [null]
+        }});
+    })
+})

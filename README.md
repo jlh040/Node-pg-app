@@ -2,7 +2,7 @@
 
 #### Functionality
 
-- This app is a RESTful back-end JSON API server that allows a user to perform all the CRUD operations on two different resources: companies, and invoices.
+- This app is a RESTful back-end JSON API server that allows a user to perform all the CRUD operations on three different resources: companies, invoices, and industries.
 - Testing will be provided shortly.
 
 #### Technicalities
@@ -16,36 +16,33 @@
 
 #### Routes
 
-- Once the server is up, you can hit any of the routes:
+- Once the server is up, visit **localhost:3000**, and you can hit any of the routes:
 
   - **GET /companies**
-
   - **GET /companies/[code]**
-
   - **POST /companies**
 
     - Requires {name, description} as JSON
     - A company code will be automatically generated thanks to [slugify](https://www.npmjs.com/package/slugify).
-  
   - **PUT /companies/[code]**
   
     - Requires {name, description} as JSON
-  
   - **DELETE /companies/[code]**
-  
   - **GET /invoices**
-  
   - **GET /invoices/[id]**
-  
   - **POST /invoices**
   
     - Requires {comp_code, amt} as JSON
-  
   - **PUT /invoices/[id]**
   
     - Requires {amt} as JSON
-  
   - **DELETE /invoices/[id]**
+  - **GET /industries**
+  - **POST /industries**
+  - Requires {industry} as JSON
   
-    
+  - **PUT /industries/[code]**
+    - Requires {companyCode} as JSON (associates a company to an industry)
+  
+  
 

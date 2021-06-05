@@ -1,4 +1,5 @@
 const ExpressError = require('./expressError');
+const db = require('./db');
 
 
 // Throws an error if the company code cannot be found
@@ -31,11 +32,27 @@ function userSentAllInvoiceData(comp_code, amt) {
     }
 }
 
+// Checks the paid status of an invoice
+async function getPaidDate(userPaidStatus, invoiceId) {
+    const result = await db.query(`SELECT paid, CAST(paid_date AS TEXT) FROM invoices WHERE id = $1`, [invoiceId]);
+    let { paid:dbPaidStatus, paid_date } = result.rows[0];
+    
+    if (dbPaidStatus === false && userPaidStatus === true) {
+        paid_date = new Date(Date.now());
+    }
+    else if (dbPaidStatus === true && userPaidStatus == false) {
+        paid_date = null;
+    }
+    
+    return paid_date;
+}
+
 
 
 module.exports = {
     doesInvoiceExist,
     doesCompanyExist,
     userSentAllCompanyData,
-    userSentAllInvoiceData
+    userSentAllInvoiceData,
+    getPaidDate
 }

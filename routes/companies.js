@@ -45,7 +45,7 @@ router.post('/', async (req, res, next) => {
             replacement: '-',
             lower: true,
             remove: /[*+~.()'"!:@^%&]/g
-        })
+        });
         const result = await db.query(`
             INSERT INTO companies (code, name, description) VALUES ($1, $2, $3)
             RETURNING code, name, description`, [code, name, description]);

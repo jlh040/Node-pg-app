@@ -1,7 +1,7 @@
 const express = require('express');
 const router = new express.Router();
 const ExpressError = require('../expressError');
-const { doesInvoiceExist, userSentAllInvoiceData } = require('../helperFuncs');
+const { doesInvoiceExist, userSentAllInvoiceData, getPaidDate } = require('../helperFuncs');
 const db = require('../db');
 
 router.get('/', async (req, res, next) => {
@@ -17,7 +17,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     try {
         const result = await db.query(`
-        SELECT id, amt, paid, comp_code, CAST(add_date AS TEXT), paid_date, name, description FROM invoices
+        SELECT id, amt, paid, comp_code, CAST(add_date AS TEXT), CAST(paid_date AS TEXT), name, description FROM invoices
         JOIN companies ON comp_code = code
         WHERE id = $1`, 
         [req.params.id]
@@ -74,14 +74,19 @@ router.post('/', async function(req, res, next) {
 
 router.put('/:id', async (req, res, next) => {
     try {
-        const { amt } = req.body;
-        if (!amt) throw new ExpressError('Must pass in amt!', 400);
+        const { amt, paid } = req.body;
+        if (amt === undefined || paid === undefined) throw new ExpressError(`Must pass in 'amt' and 'paid'!`, 400);
+
+        const updated_paid_date = await getPaidDate(paid, req.params.id);
 
         const result = await db.query(`
-            UPDATE invoices SET amt = $1 WHERE id = $2
-            RETURNING id, comp_code, amt, paid, CAST(add_date AS TEXT), paid_date`, [amt, req.params.id]);
+            UPDATE invoices SET amt = $1, paid_date = $2, paid = $3 WHERE id = $4
+            RETURNING id, comp_code, amt, paid, CAST(add_date AS TEXT), CAST(paid_date AS TEXT)`,
+            [amt, updated_paid_date, paid, req.params.id]);
+
         doesInvoiceExist(result, req.params.id);
-        const { id, comp_code, paid, add_date, paid_date } = result.rows[0]
+
+        const { id, comp_code, add_date, paid_date } = result.rows[0];
     
         return res.json({
             invoice: {

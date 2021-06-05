@@ -41,7 +41,7 @@ describe('GET /invoices', () => {
     })
 });
 
-describe('GET /:id', () => {
+describe('GET /invoices/:id', () => {
     test('Get a single invoice', async () => {
         const resp = await request(app).get(`/invoices/${testInvoice.id}`);
 
@@ -86,6 +86,41 @@ describe('POST /invoices', () => {
                 paid_date: null
             }
         })
+    })
+});
+
+describe('PUT /invoices/:id', () => {
+    test('Update an invoice', async () => {
+        const resp = await request(app)
+            .put(`/invoices/${testInvoice.id}`)
+            .send({amt: 10.99})
+        
+        expect(resp.status).toBe(200);
+        expect(resp.body).toEqual({
+            invoice: {
+                id: testInvoice.id,
+                comp_code: testInvoice.comp_code,
+                amt: 10.99,
+                paid: testInvoice.paid,
+                add_date: testInvoice.add_date,
+                paid_date: testInvoice.paid_date
+            }
+        });
+    });
+
+    test('Return 404 if invoice is not found', async () => {
+        const resp = await request(app)
+            .put(`/invoices/978`)
+            .send({amt: 89.99});
+        
+        expect(resp.statusCode).toBe(404);
+    })
+
+    test(`Return 400 if 'amt' is not passed in`, async () => {
+        const resp = await request(app)
+            .put(`/invoices/${testInvoice.id}`);
+        
+        expect(resp.statusCode).toBe(400);
     })
 })
 

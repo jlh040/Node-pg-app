@@ -79,7 +79,7 @@ router.put('/:id', async (req, res, next) => {
 
         const result = await db.query(`
             UPDATE invoices SET amt = $1 WHERE id = $2
-            RETURNING id, comp_code, amt, paid, add_date, paid_date`, [amt, req.params.id]);
+            RETURNING id, comp_code, amt, paid, CAST(add_date AS TEXT), paid_date`, [amt, req.params.id]);
         doesInvoiceExist(result, req.params.id);
         const { id, comp_code, paid, add_date, paid_date } = result.rows[0]
     

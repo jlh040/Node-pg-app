@@ -51,7 +51,22 @@ describe('GET /companies/:code', () => {
 
     test('Return 404 if company code is not found', async () => {
         const response = await request(app).get('/bobslol');
-
         expect(response.statusCode).toBe(404);
+    })
+})
+
+describe('POST /companies', () => {
+    test('Create a company', async () => {
+        const company = {
+            code: 'goog',
+            name: 'google',
+            description: 'Search Engine'
+        }
+        const response = await request(app)
+            .post('/companies')
+            .send(company);
+
+        expect(response.statusCode).toBe(201);
+        expect(response.body).toEqual({company})
     })
 })

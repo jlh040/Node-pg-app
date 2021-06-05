@@ -48,4 +48,10 @@ describe('GET /companies/:code', () => {
             invoices: [null]
         }});
     })
+
+    test('Return 404 if company code is not found', async () => {
+        const response = await request(app).get('/bobslol');
+
+        expect(response.statusCode).toBe(404);
+    })
 })

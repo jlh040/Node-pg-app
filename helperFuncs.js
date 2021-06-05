@@ -48,7 +48,6 @@ async function getPaidDate(userPaidStatus, invoiceId) {
 }
 
 
-
 module.exports = {
     doesInvoiceExist,
     doesCompanyExist,

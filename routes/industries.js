@@ -4,7 +4,12 @@ const db = require('../db');
 const slugify = require('slugify');
 
 router.get('/', async (req, res, next) => {
-    const result = await db.query(`SELECT industry, code FROM industries`);
+    const result = await db.query(`
+        SELECT industry, ARRAY_AGG(companies.code) AS companyCodes FROM industries
+        LEFT JOIN companies_industries ON industries.code = companies_industries.ind_code
+        LEFT JOIN companies ON companies.code = companies_industries.comp_code
+        GROUP BY industry;
+    `);
     return res.json({industries: result.rows});
 });
 
@@ -29,6 +34,8 @@ router.post('/', async (req, res, next) => {
         return next(e);
     }
 })
+
+
 
 
 

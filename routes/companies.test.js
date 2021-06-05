@@ -97,3 +97,13 @@ describe('PUT /companies/:code', () => {
         expect(response.status).toBe(400);
     })
 })
+
+describe('DELETE /companies/:code', () => {
+    test('Delete a company', async () => {
+        const response = await request(app).delete(`/companies/${testCompany.code}`);
+        const result = await db.query(`SELECT COUNT(*) FROM companies`);
+
+        expect(response.statusCode).toBe(200);
+        expect(+result.rows[0].count).toBe(0);
+    })
+})

@@ -19,6 +19,7 @@
   "homepage": "https://github.com/jlh040/Node-pg-app#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "pg": "^8.6.0"
+    "pg": "^8.6.0",
+    "supertest": "^6.1.3"
   }
 }

@@ -45,7 +45,8 @@ describe('GET /companies/:code', () => {
             name: testCompany.name,
             code: testCompany.code,
             description: testCompany.description,
-            invoices: [null]
+            invoices: [null],
+            industries: [null]
         }});
     })
 
@@ -58,7 +59,6 @@ describe('GET /companies/:code', () => {
 describe('POST /companies', () => {
     test('Create a company', async () => {
         const company = {
-            code: 'goog',
             name: 'google',
             description: 'Search Engine'
         }
@@ -67,7 +67,7 @@ describe('POST /companies', () => {
             .send(company);
 
         expect(response.statusCode).toBe(201);
-        expect(response.body).toEqual({company})
+        expect(response.body).toEqual({company: {name: company.name, description: company.description, code: 'google'}})
     })
 })
 

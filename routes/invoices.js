@@ -74,19 +74,19 @@ router.post('/', async function(req, res, next) {
 
 router.put('/:id', async (req, res, next) => {
     try {
-        const { amt, paid } = req.body;
-        if (amt === undefined || paid === undefined) throw new ExpressError(`Must pass in 'amt' and 'paid'!`, 400);
+        if (req.body.amt === undefined || req.body.paid === undefined) throw new ExpressError(`Must pass in 'amt' and 'paid'!`, 400);
+        const result1 = await db.query(`SELECT id FROM invoices WHERE id = $1`, [req.params.id])
+        doesInvoiceExist(result1, req.params.id);
+        
 
-        const updated_paid_date = await getPaidDate(paid, req.params.id);
-
+        const updated_paid_date = await getPaidDate(req.body.paid, req.params.id);
+        console.log('hello')
         const result = await db.query(`
             UPDATE invoices SET amt = $1, paid_date = $2, paid = $3 WHERE id = $4
             RETURNING id, comp_code, amt, paid, CAST(add_date AS TEXT), CAST(paid_date AS TEXT)`,
-            [amt, updated_paid_date, paid, req.params.id]);
+            [req.body.amt, updated_paid_date, req.body.paid, req.params.id]);
 
-        doesInvoiceExist(result, req.params.id);
-
-        const { id, comp_code, add_date, paid_date } = result.rows[0];
+        const { id, comp_code, add_date, paid_date, paid, amt } = result.rows[0];
     
         return res.json({
             invoice: {

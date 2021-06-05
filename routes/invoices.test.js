@@ -44,8 +44,6 @@ describe('GET /invoices', () => {
 describe('GET /invoices/:id', () => {
     test('Get a single invoice', async () => {
         const resp = await request(app).get(`/invoices/${testInvoice.id}`);
-
-        console.log(resp.body)
         
         expect(resp.statusCode).toBe(200);
         expect(resp.body).toEqual({invoice: {
@@ -93,7 +91,7 @@ describe('PUT /invoices/:id', () => {
     test('Update an invoice', async () => {
         const resp = await request(app)
             .put(`/invoices/${testInvoice.id}`)
-            .send({amt: 10.99})
+            .send({amt: 10.99, paid: true})
         
         expect(resp.status).toBe(200);
         expect(resp.body).toEqual({
@@ -101,22 +99,22 @@ describe('PUT /invoices/:id', () => {
                 id: testInvoice.id,
                 comp_code: testInvoice.comp_code,
                 amt: 10.99,
-                paid: testInvoice.paid,
+                paid: true,
                 add_date: testInvoice.add_date,
-                paid_date: testInvoice.paid_date
+                paid_date: expect.any(String)
             }
         });
     });
 
     test('Return 404 if invoice is not found', async () => {
         const resp = await request(app)
-            .put(`/invoices/978`)
-            .send({amt: 89.99});
+            .put(`/invoices/666`)
+            .send({amt: 89.99, paid: false});
         
         expect(resp.statusCode).toBe(404);
     })
 
-    test(`Return 400 if 'amt' is not passed in`, async () => {
+    test(`Return 400 if data is missing`, async () => {
         const resp = await request(app)
             .put(`/invoices/${testInvoice.id}`);
         

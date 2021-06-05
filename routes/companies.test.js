@@ -70,3 +70,30 @@ describe('POST /companies', () => {
         expect(response.body).toEqual({company})
     })
 })
+
+describe('PUT /companies/:code', () => {
+    test('Update a company', async () => {
+        const response = await request(app)
+            .put(`/companies/${testCompany.code}`)
+            .send({name: 'DataDog', description: 'A CMAS company'});
+        
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual({company: {name: 'DataDog', code: 'dd', description: 'A CMAS company'}});
+    })
+
+    test('Return 404 if the company cannot be found', async () => {
+        const response = await request(app)
+            .put('/companies/AMZN')
+            .send({name: 'Amazon', description: 'Big company'});
+        
+        expect(response.status).toBe(404);
+    })
+
+    test('Return 400 if the request is missing data', async () => {
+        const response = await request(app)
+            .put(`/companies/${testCompany.code}`)
+            .send({name: 'DataDog'});
+
+        expect(response.status).toBe(400);
+    })
+})

@@ -51,3 +51,14 @@ describe(`GET /industries`, () => {
         })
     })
 })
+
+describe('POST /industries', () => {
+    test('Create an industry', async () => {
+        const resp = await request(app)
+            .post('/industries')
+            .send({industry: 'food and candy'});
+        
+        expect(resp.status).toBe(201);
+        expect(resp.body).toEqual({industry: {industry: 'food and candy', code: 'food-and-candy'}});
+    })
+})

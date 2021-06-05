@@ -34,6 +34,9 @@ afterAll(() => {
 
 describe('GET /invoices', () => {
     test('Get all invoices', async () => {
-        expect(1).toBe(1);
+        const response = await request(app).get('/invoices');
+
+        expect(response.statusCode).toBe(200);
+        expect(response.body).toEqual({invoices: [{id: testInvoice.id, comp_code: testInvoice.comp_code}]});
     })
 })

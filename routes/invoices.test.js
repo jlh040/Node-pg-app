@@ -68,3 +68,24 @@ describe('GET /:id', () => {
         expect(resp.statusCode).toBe(404);
     })
 });
+
+describe('POST /invoices', () => {
+    test('Create an invoice', async () => {
+        const response = await request(app)
+            .post('/invoices')
+            .send({comp_code: 'dd', amt: '549.99'});
+        
+        expect(response.statusCode).toBe(201);
+        expect(response.body).toEqual({
+            invoice: {
+                id: expect.any(Number),
+                comp_code: 'dd',
+                amt: '549.99',
+                paid: false,
+                add_date: expect.any(String),
+                paid_date: null
+            }
+        })
+    })
+})
+

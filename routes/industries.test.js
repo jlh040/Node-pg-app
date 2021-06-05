@@ -16,7 +16,7 @@ beforeEach(async () => {
 
     const compResult = await db.query(`
     INSERT INTO companies (code, name, description)
-    VALUES ('bg', 'boing', 'An airplane company')
+    VALUES ('bg', 'boeing', 'An airplane company')
     RETURNING code, name, description`);
 
     await db.query(`
@@ -39,6 +39,15 @@ afterAll(() => {
 
 describe(`GET /industries`, () => {
     test('Get all industries w/ company codes', async () => {
-        expect(1).toBe(1);
+        const response = await request(app).get('/industries')
+
+        expect(response.status).toBe(200);
+        expect(response.body).toEqual({
+            industries: [{
+                industry: testIndustry.industry,
+                code: testIndustry.code,
+                company_codes: ['bg']
+            }]
+        })
     })
 })

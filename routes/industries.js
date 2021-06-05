@@ -6,7 +6,7 @@ const slugify = require('slugify');
 
 router.get('/', async (req, res, next) => {
     const result = await db.query(`
-        SELECT industry, industries.code, ARRAY_AGG(companies.code) AS companyCodes FROM industries
+        SELECT industry, industries.code, ARRAY_AGG(companies.code) AS company_codes FROM industries
         LEFT JOIN companies_industries ON industries.code = companies_industries.ind_code
         LEFT JOIN companies ON companies.code = companies_industries.comp_code
         GROUP BY industry, industries.code;

@@ -1,12 +1,14 @@
-process.env.NODE_ENV = 'test';
+process.env.NODE_ENV = 'test'; // Set the testing environment
 
+// import app, db, and supertest
 const app = require('../app');
 const db = require('../db');
 const request = require('supertest');
 
-let testCompany;
+let testCompany; // create a global variable to hold the test company
 
 beforeEach(async () => {
+    // insert a test company into the db
     const result = await db.query(`
         INSERT INTO companies (code, name, description)
         VALUES ('dd', 'DataDog', 'Cloud monitoring as a service')
@@ -16,15 +18,20 @@ beforeEach(async () => {
 })
 
 afterEach(async () => {
+    // delete everything from the DB
     await db.query('DELETE FROM companies');
 })
 
 afterAll(() => {
+    // close the DB connection
     db.end();
 })
 
 describe('GET /companies', () => {
-    test('Get a list of companies', () => {
-        expect(1).toEqual(1)
+    test('Get a list of companies', async () => {
+        const resp = await request(app).get('/companies')
+
+        expect(resp.statusCode).toBe(200);
+        expect(resp.body).toEqual({companies: [{code: testCompany.code, name: testCompany.name}]});
     })
 })

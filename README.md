@@ -24,27 +24,28 @@
 
   - **POST /companies**
 
-    - Requires {code, name, description} as JSON
-
-  - **PUT /companies/[code]**
-
     - Requires {name, description} as JSON
-
+    - A company code will be automatically generated thanks to [slugify](https://www.npmjs.com/package/slugify).
+  
+  - **PUT /companies/[code]**
+  
+    - Requires {name, description} as JSON
+  
   - **DELETE /companies/[code]**
-
+  
   - **GET /invoices**
-
+  
   - **GET /invoices/[id]**
-
+  
   - **POST /invoices**
-
+  
     - Requires {comp_code, amt} as JSON
-
+  
   - **PUT /invoices/[id]**
-
+  
     - Requires {amt} as JSON
-
+  
   - **DELETE /invoices/[id]**
-
+  
     
 

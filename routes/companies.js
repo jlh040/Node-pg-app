@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:code', async (req, res, next) => {
     try {
         const { code } = req.params;
-        const result = await db.query(`SELECT * FROM companies JOIN invoices ON code = comp_code WHERE code = $1`, [code]);
+        const result = await db.query(`SELECT * FROM companies LEFT JOIN invoices ON code = comp_code WHERE code = $1`, [code]);
         const { name, description } = result.rows[0];
         const invoices = result.rows.map(val => val.id);
         doesCompanyExist(result, code);

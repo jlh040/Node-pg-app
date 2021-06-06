@@ -3,7 +3,7 @@
 #### Functionality
 
 - This app is a RESTful back-end JSON API server that allows a user to perform all the CRUD operations on three different resources: companies, invoices, and industries.
-- All routes have integration tests.
+- All routes have integration tests. (See the *routes* folder)
 
 #### Technicalities
 

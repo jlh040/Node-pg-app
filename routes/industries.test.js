@@ -7,6 +7,7 @@ const request = require('supertest');
 
 let testIndustry;
 let testCompany;
+let testCompany2;
 
 beforeEach(async () => {
     const indResult = await db.query(`
@@ -19,12 +20,18 @@ beforeEach(async () => {
     VALUES ('bg', 'boeing', 'An airplane company')
     RETURNING code, name, description`);
 
+    const compResult2 = await db.query(`
+    INSERT INTO companies (code, name, description)
+    VALUES ('united', 'United Airlines', 'A large aircraft company')
+    RETURNING code, name, description`);
+
     await db.query(`
     INSERT INTO companies_industries (comp_code, ind_code)
     VALUES ('bg', 'aero')`);
 
     testIndustry = indResult.rows[0];
     testCompany = compResult.rows[0];
+    testCompany2 = compResult2.rows[0];
 });
 
 afterEach(async () => {
@@ -50,7 +57,7 @@ describe(`GET /industries`, () => {
             }]
         })
     })
-})
+});
 
 describe('POST /industries', () => {
     test('Create an industry', async () => {
@@ -61,4 +68,16 @@ describe('POST /industries', () => {
         expect(resp.status).toBe(201);
         expect(resp.body).toEqual({industry: {industry: 'food and candy', code: 'food-and-candy'}});
     })
+});
+
+describe('PUT /industries/:code', () => {
+    test('Associate a company to an industry', async () => {
+        const resp = await request(app)
+            .put(`/industries/${testIndustry.code}`)
+            .send({companyCode: testCompany2.code});
+        
+        expect(resp.status).toBe(200);
+        expect(resp.body).toEqual({message: 'Update successful!'})
+    })
 })
+
